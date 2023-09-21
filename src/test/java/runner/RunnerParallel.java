@@ -21,14 +21,10 @@ public class RunnerParallel {
     @Test
     void testParallel() {
         Results results = Runner.path("classpath:features")
-                .outputCucumberJson(true)
                 .tags("@test-request")
                 .parallel(4);
         assertEquals(0, results.getFailCount(), results.getErrorMessages());
         generateReport(results.getReportDir());
-        System.out.println("Total feature => " + results.getFeaturesTotal());
-        System.out.println("Total Scenarios => " + results.getScenariosTotal());
-        System.out.println("Total Scenarios Pass => " + results.getScenariosPassed());
     }
 
     public static void generateReport(String karateOutputPath) {
