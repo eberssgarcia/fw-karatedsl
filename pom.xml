@@ -7,30 +7,28 @@
     <groupId>org.example</groupId>
     <artifactId>fw-karate-dsl</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>11</java.version>
+        <maven.compiler.version>3.6.0</maven.compiler.version>
+        <karate.version>0.9.6</karate.version>
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/com.intuit.karate/karate-junit5 -->
-        <dependency>
-            <groupId>com.intuit.karate</groupId>
-            <artifactId>karate-junit5</artifactId>
-            <version>1.4.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.intuit.karate/karate-apache -->
         <dependency>
             <groupId>com.intuit.karate</groupId>
             <artifactId>karate-apache</artifactId>
-            <version>0.9.6</version>
+            <version>${karate.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.intuit.karate</groupId>
+            <artifactId>karate-junit5</artifactId>
+            <version>${karate.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <!-- https://github.com/damianszczepanik/cucumber-reporting -->
             <groupId>net.masterthought</groupId>
@@ -44,12 +42,13 @@
             <version>5.0.3</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.intuit.karate/karate-core -->
         <dependency>
-            <groupId>com.intuit.karate</groupId>
-            <artifactId>karate-core</artifactId>
-            <version>1.4.1.RC3</version>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-netty</artifactId>
+            <version>5.11.1</version>
+            <scope>test</scope>
         </dependency>
+
 
     </dependencies>
 
@@ -62,29 +61,56 @@
                 </excludes>
             </testResource>
         </testResources>
-
         <plugins>
-            <!-- Configuración del compilador -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.9.0</version>
+                <version>${maven.compiler.version}</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerArgument>-Werror</compilerArgument>
                 </configuration>
             </plugin>
-            <!-- Para ejecutar tus pruebas de manera automatizada y generar informes sobre los resultados de las pruebas -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>2.22.2</version>
                 <configuration>
-                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                    <includes>
+                        <include>**/ParallelBuilderWithCucumberReport.java</include>
+                    </includes>
+                    <rerunFailingTestsCount>2</rerunFailingTestsCount>
+                    <systemProperties>
+                        <karate.env>${karate.profile}</karate.env>
+                    </systemProperties>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>staging</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <karate.profile>staging</karate.profile>
+            </properties>
+        </profile>
+        <profile>
+            <id>preprod</id>
+            <properties>
+                <karate.profile>preprod</karate.profile>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <karate.profile>prod</karate.profile>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>
