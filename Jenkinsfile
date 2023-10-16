@@ -59,6 +59,10 @@ pipeline {
             // One or more steps need to be included within each condition's block.
             junit 'target/surefire-reports/*.xml'
             cucumber buildStatus: 'UNCHANGED', customCssFiles: '', customJsFiles: '', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/*.json', jsonReportDirectory: 'target/surefire-reports', pendingStepsNumber: -1, reportTitle: 'Karate Test Execution', skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+
+        zip zipFile:'target/test-result.zip', archive: true, dir: 'target/surefire-reports', overwrite: true
+                    emailext subject: "Job '${env.JOB_NAME} - ${env.BUILD_NUMBER} '", body: 'Refer to the attachment', attachmentsPattern: 'target/test-result.zip', to: 'to@example.com'
+
         }
     }
 }
