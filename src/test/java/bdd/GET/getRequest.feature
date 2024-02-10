@@ -1,4 +1,4 @@
-@test-request
+@test-execution
 Feature: To test the get endpoint of the application
   To test different get endpoint with different data format supported by the application
 
@@ -6,7 +6,7 @@ Feature: To test the get endpoint of the application
     Given url 'https://videogamedb.uk'
     And print '==== This is Background ===='
 
-  @test-request @CP001
+  @test-group @test-001
   Scenario: To get all the data from application in JSON format
     Given path '/api/v2/videogame'
     And header Accept = 'application/json'
@@ -14,7 +14,7 @@ Feature: To test the get endpoint of the application
     Then status 200 # The status code response should be 200
     And match header Content-Type == 'application/json'
 
-  @test-request @CP002
+  @test-group @test-002
   Scenario: To get all the data from application in XML format
     Given path '/api/v2/videogame'
     And header Accept = 'application/xml'
