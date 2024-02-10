@@ -1,13 +1,13 @@
-package features.GET;
+package bdd.POST;
 
 import com.intuit.karate.junit5.Karate;
 import com.intuit.karate.junit5.Karate.Test;
 
-public class runnerGet {
+public class runnerPost {
 
     @Test
     public Karate runTest() {
-        return Karate.run("getRequest")
+        return Karate.run("createNewPet")
 //                .tags("~@ignore")
                 .relativeTo(getClass());
     }

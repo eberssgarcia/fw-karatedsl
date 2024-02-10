@@ -1,31 +1,15 @@
-package runner;
+package util;
 
-import com.intuit.karate.Results;
-import com.intuit.karate.Runner;
-import org.junit.jupiter.api.Test;
+import net.masterthought.cucumber.Configuration;
+import net.masterthought.cucumber.ReportBuilder;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import net.masterthought.cucumber.Configuration;
-import net.masterthought.cucumber.ReportBuilder;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-
-public class RunnerParallel {
-
-    @Test
-    void testParallel() {
-        Results results = Runner.path("classpath:features")
-                .tags("@test-request")
-                .parallel(4);
-        assertEquals(0, results.getFailCount(), results.getErrorMessages());
-        generateReport(results.getReportDir());
-    }
+public class ReportsUtil {
 
     public static void generateReport(String karateOutputPath) {
         Collection<File> jsonFiles = FileUtils.listFiles(new File(karateOutputPath), new String[]{"json"}, true);
@@ -35,5 +19,4 @@ public class RunnerParallel {
         ReportBuilder reportBuilder = new ReportBuilder(jsonPaths, config);
         reportBuilder.generateReports();
     }
-
 }
