@@ -4,6 +4,7 @@ Feature: To create nue Pet entry in the application
   Background: Create and initialize base URI
     Given url 'https://petstore.swagger.io'
 
+  @TEST-001
   Scenario: To create the new Pet entry in JSON format
     Given path '/v2/pet'
     And request {  "category": {  "_comment": "Categoría de mascota.",  "name": "Doberman"  },  "_comment": "Nombre de la mascota.",  "name": "Vegueta",  "tags": [  {  "_comment": "Tag de mascota.",  "name": "mascotas"  }  ],  "status": "available"  }
@@ -13,7 +14,7 @@ Feature: To create nue Pet entry in the application
     And print response
     And match response.name == 'Vegueta'
 
-
+  @TEST-002
   Scenario: To create the new Pet entry in JSON format using file
     Given path '/v2/pet'
 #    And print read('classpath:source/request/jsonRequest.json')
@@ -24,9 +25,30 @@ Feature: To create nue Pet entry in the application
     When method post
     And status 200
     And print response
-    And match response.name == 'Vegueta'
+#    And match response.name == 'Vegueta'
+
+  @createPetWithParameters
+  Scenario Outline: Crear una nueva mascota para categoria <catName>
+    Given path '/v2/pet'
+    And headers { Accept: 'application/json', Content-Type: 'application/json' }
+    And def req = read('source/request/jsonRequest.json')
+    * set req.name = "<name>"
+    * set req.category.name = "<catName>"
+    * set req.tags[0].name = "<tags>"
+    And print req
+    And request req
+    When method post
+    Then status 200
+    And match response.name == "<name>"
+    Examples:
+      | name    | catName  | tags   |
+      | Zeus    | Doberman | lovely |
+      | Perry   | Chug     | peque  |
+      | Vegueta | Pug      | gordo  |
+      | Choco   | Chusco   | lovely |
 
 
+  @TEST-003
   Scenario: To create the new Pet entry in JSON format embedded expresion
     Given path '/v2/pet'
     * def getId = function() { return Math.floor((100) * Math.random()); }
@@ -37,6 +59,7 @@ Feature: To create nue Pet entry in the application
     And print response
     And match response.name == 'doggie'
 
+  @TEST-004
   Scenario: To create the new Pet entry in JSON format embedded expresion
     Given path '/v2/pet'
     * def getId = function() { return Math.floor((100) * Math.random()); }

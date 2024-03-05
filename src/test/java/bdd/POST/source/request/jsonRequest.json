@@ -1,14 +1,14 @@
 {
   "category": {
     "_comment": "Categoría de mascota.",
-    "name": "Doberman"
+    "name": "$catName"
   },
   "_comment": "Nombre de la mascota.",
-  "name": "Vegueta",
+  "name": "$name",
   "tags": [
     {
       "_comment": "Tag de mascota.",
-      "name": "mascotas"
+      "name": "$tags"
     }
   ],
   "status": "available"
