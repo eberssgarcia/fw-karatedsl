@@ -29,7 +29,7 @@ pipeline {
         stage('Build and Test') {
             steps {
                 echo 'Compilando y ejecutando pruebas...'
-                bat 'mvn clean test -Dcucumber.options="--tags @freerangetesters-02"'
+                bat 'mvn clean test'
             }
         }
     }
