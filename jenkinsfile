@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'maven-3.9.8'
+        jdk 'openjdk-17'
+    }
+
+    options {
+        timestamps()
+        skipStagesAfterUnstable()
+    }
+
+    stages {
+        stage('Clean') {
+            steps {
+                cleanWs notFailBuild: true
+                echo 'Limpiando el workspace...'
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/eberssgarcia/ebcode-continuous-testing.git', branch: 'develop'
+                echo 'Código clonado correctamente.'
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                echo 'Compilando y ejecutando pruebas...'
+                bat 'mvn clean test -Dcucumber.options="--tags @freerangetesters-02"'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '¡Todo OK!'
+        }
+
+        failure {
+            echo 'Algo falló :('
+        }
+
+        always {
+            echo 'Terminó la ejecución del pipeline.'
+
+            // Reporte Cucumber
+            cucumber buildStatus: 'UNCHANGED',
+                     fileIncludePattern: '**/cucumber.json',
+                     jsonReportDirectory: 'target/cucumber-reports',
+                     reportTitle: 'Karate Test Execution',
+                     sortingMethod: 'ALPHABETICAL'
+        }
+    }
+}
