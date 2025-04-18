@@ -21,7 +21,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/eberssgarcia/ebcode-continuous-testing.git', branch: 'develop'
+                git url: 'https://github.com/eberssgarcia/fw-karatedsl.git', branch: 'feature/develop'
                 echo 'Código clonado correctamente.'
             }
         }
